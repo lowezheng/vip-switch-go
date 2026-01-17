@@ -1,0 +1,1 @@
+module vip-switch-go
