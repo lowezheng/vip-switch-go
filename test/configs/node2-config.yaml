@@ -1,0 +1,59 @@
+node:
+  id: "node2"
+  raft_addr: "127.0.0.1:7947"
+  data_dir: "./test/data/node2"
+
+cluster:
+  nodes:
+    - id: "node1"
+      addr: "127.0.0.1:7946"
+    - id: "node2"
+      addr: "127.0.0.1:7947"
+    - id: "node3"
+      addr: "127.0.0.1:7948"
+
+hooks:
+  enabled: true
+  timeout: 60s
+  on_failure: "abort"
+
+  ToMaster:
+    command: "./test/scripts/on-master-test.sh"
+    args: []
+    timeout: 30s
+    on_failure: "abort"
+    environment:
+      EVENT_TYPE: "ToMaster"
+      NODE_ID: "{{.NodeID}}"
+
+  ToSlave:
+    command: "./test/scripts/on-slave-test.sh"
+    args: []
+    timeout: 30s
+    on_failure: "abort"
+    environment:
+      EVENT_TYPE: "ToSlave"
+      NODE_ID: "{{.NodeID}}"
+
+  ToReady:
+    command: "./test/scripts/on-ready-test.sh"
+    args: []
+    timeout: 10s
+    on_failure: "continue"
+    environment:
+      EVENT_TYPE: "ToReady"
+      NODE_ID: "{{.NodeID}}"
+
+  ToDestroy:
+    command: "./test/scripts/on-destroy-test.sh"
+    args: []
+    timeout: 10s
+    on_failure: "continue"
+    environment:
+      EVENT_TYPE: "ToDestroy"
+      NODE_ID: "{{.NodeID}}"
+
+logging:
+  level: "info"
+  format: "text"
+  output: "./test/logs/node2.log"

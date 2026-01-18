@@ -1,0 +1,59 @@
+node:
+  id: "node1"
+  raft_addr: "192.168.1.10:7946"
+  data_dir: "/var/lib/vip-switch"
+
+cluster:
+  nodes:
+    - id: "node1"
+      addr: "192.168.1.10:7946"
+    - id: "node2"
+      addr: "192.168.1.11:7946"
+    - id: "node3"
+      addr: "192.168.1.12:7946"
+
+hooks:
+  enabled: true
+  timeout: 60s
+  on_failure: "abort"
+
+  ToMaster:
+    command: "/usr/local/bin/on-master.sh"
+    args: []
+    timeout: 30s
+    on_failure: "abort"
+    environment:
+      EVENT_TYPE: "ToMaster"
+      NODE_ID: "{{.NodeID}}"
+
+  ToSlave:
+    command: "/usr/local/bin/on-slave.sh"
+    args: []
+    timeout: 30s
+    on_failure: "abort"
+    environment:
+      EVENT_TYPE: "ToSlave"
+      NODE_ID: "{{.NodeID}}"
+
+  ToReady:
+    command: "/usr/local/bin/on-ready.sh"
+    args: []
+    timeout: 10s
+    on_failure: "continue"
+    environment:
+      EVENT_TYPE: "ToReady"
+      NODE_ID: "{{.NodeID}}"
+
+  ToDestroy:
+    command: "/usr/local/bin/on-destroy.sh"
+    args: []
+    timeout: 10s
+    on_failure: "continue"
+    environment:
+      EVENT_TYPE: "ToDestroy"
+      NODE_ID: "{{.NodeID}}"
+
+logging:
+  level: "info"
+  format: "json"
+  output: "/var/log/vip-switch/daemon.log"
