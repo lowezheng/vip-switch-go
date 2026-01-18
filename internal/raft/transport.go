@@ -1,3 +1,17 @@
+// Copyright 2026 lowezheng
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package raft
 
 import (
@@ -42,12 +56,12 @@ type raftLogger struct {
 	logger *slog.Logger
 }
 
-// GetLevel returns the current log level
+// GetLevel returns current log level
 func (l *raftLogger) GetLevel() hclog.Level {
 	return hclog.Info // Default to info level
 }
 
-// SetLevel sets the minimum log level
+// SetLevel sets minimum log level
 func (l *raftLogger) SetLevel(level hclog.Level) {
 	// slog handles level filtering via handler options
 	// This is a no-op for now
@@ -160,7 +174,7 @@ func (l *raftLogger) Log(level hclog.Level, msg string, args ...interface{}) {
 	l.logger.Log(context.Background(), logLevel, msg, toKV(args)...)
 }
 
-// Name returns the name of the logger
+// Name returns name of the logger
 func (l *raftLogger) Name() string {
 	return "raft-logger"
 }
